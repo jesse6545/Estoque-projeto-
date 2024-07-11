@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parafuso</title>
+    <link rel="stylesheet" href="styles.css">
+<style type="text/css" id="dcoder_stylesheet">body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.calculator {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.display {
+    margin-bottom: 20px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+button {
+    width: 70px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    outline: none;
+}
+
+button:active {
+    background-color: #0056b3;
+}
+
+.history {
+    margin-top: 20px;
+}
+
+.history ul {
+    list-style: none;
+    padding: 0;
+}
+
+.history li {
+    background: #e9e9e9;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.history-button {
+    width: 150px;  /* Increased width */
+    height: 50px;  /* Increased height */
+    font-size: 18px;  /* Increased font size */
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.history-button:active {
+    background-color: #0056b3;
+}
+
+.historyPage {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 80%;
+    margin: 20px auto;
+}</style></head>
+<body>
+    <div class="calculator">
+        <h1>Parafuso</h1>
+        <div class="display">
+            <input type="number" id="valueInput" placeholder="Digite um valor">
+            <h2>Em Estoque: <span id="stockDisplay">0</span></h2>
+        </div>
+        <div class="buttons">
+            <button id="subtractButton">Saída</button>
+            <button id="addButton">Entrada</button>
+        </div>
+        <button id="historyPageButton" class="history-button">Ver Histórico</button>
+        <div class="history">
+            <h3>Histórico</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+<script type="text/javascript" id="dcoder_script">let stock = 0;
+const valueInput = document.getElementById('valueInput');
+const stockDisplay = document.getElementById('stockDisplay');
+const addButton = document.getElementById('addButton');
+const subtractButton = document.getElementById('subtractButton');
+const historyList = document.getElementById('historyList');
+const historyPageButton = document.getElementById('historyPageButton');
+
+addButton.addEventListener('click', () => {
+    const value = parseFloat(valueInput.value);
+    if (!isNaN(value)) {
+        stock += value;
+        updateDisplay();
+        addHistoryEntry('Entrada', value);
+        valueInput.value = '';
+    }
+});
+
+subtractButton.addEventListener('click', () => {
+    const value = parseFloat(valueInput.value);
+    if (!isNaN(value)) {
+        stock -= value;
+        updateDisplay();
+        addHistoryEntry('Saída', value);
+        valueInput.value = '';
+    }
+});
+
+historyPageButton.addEventListener('click', () => {
+    window.open('history.html', '_blank');
+});
+
+function updateDisplay() {
+    stockDisplay.textContent = stock;
+}
+
+function addHistoryEntry(type, value) {
+    const li = document.createElement('li');
+    const now = new Date();
+    const dateTime = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+    li.textContent = `${type}: ${value} - ${dateTime}`;
+    historyList.appendChild(li);
+
+    // Save the history to localStorage
+    const history = JSON.parse(localStorage.getItem('history')) || [];
+    history.push({ type, value, dateTime });
+    localStorage.setItem('history', JSON.stringify(history));
+}</script></body></html>
